@@ -1,0 +1,15 @@
+
+IF %BGT_VAR%
+  Global("TICLove","GLOBAL",0)
+	!Dead("TICordel")
+	!Dead("TIDisper")
+	!Exists("TICordel")
+	!Exists("TIDisper")
+
+THEN
+  RESPONSE #100
+    SetGlobal("TICLove","GLOBAL",1)
+        CreateCreature("TICordel",[1746.1618]%FACE_14%)
+        CreateCreature("TIDisper",[1740.1622]%FACE_6%)
+        Continue ()
+END

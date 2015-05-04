@@ -1,0 +1,1 @@
+LPF ITEM_ALTER_EFFECT INT_VAR opcode = 139 parameter1 = "A letter falls out of the spine of the book." END
