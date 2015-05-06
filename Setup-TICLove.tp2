@@ -1,0 +1,417 @@
+//Beginning Info:
+BACKUP ~TICLove/Backup~
+AUTHOR ~Tibicina~
+VERSION ~1.0~
+README ~TICLove/TICLove_Readme.txt~
+
+//Crossplatform var stuff
+ALWAYS
+ACTION_IF GAME_IS ~bgee~ THEN BEGIN
+  /*The player is using version BG:EE*/
+  PRINT ~BGEE install detected~
+  INCLUDE ~TICLove/lib/liam_bgee_vars.tpa~
+END ELSE BEGIN
+ACTION_IF GAME_IS ~tutu tutu_totsc~ THEN BEGIN
+    /*The player is using version Tutu*/
+    PRINT ~Tutu install detected.~
+    INCLUDE ~TICLove/lib/g3_tutu_cpmvars.tpa~
+END ELSE BEGIN
+ACTION_IF GAME_IS ~bgt~ THEN BEGIN
+        /*The player is using version BGT*/
+        PRINT ~BGT install detected.~
+        INCLUDE ~TICLove/lib/g3_bgt_cpmvars.tpa~
+        /*The player is not using an acceptable version*/
+END ELSE BEGIN FAIL ~Please install on BGEE, Tutu or BGT.~
+END
+
+DEFINE_ACTION_FUNCTION extend_area_script
+STR_VAR area=""
+top=""
+bottom=""
+BEGIN
+
+// find the area script from the area file
+COPY_EXISTING "%area%.are" override
+READ_ASCII 0x94 script
+BUT_ONLY
+
+// if it doesn't exist, give it a default name
+ACTION_IF "%script%" STRING_EQUAL "" BEGIN
+OUTER_INNER_PATCH_SAVE script "%area%" BEGIN
+REPLACE_TEXTUALLY "FW" "_AR" // TUTU naming conventions
+END
+END
+
+// extend the script
+ACTION_IF "%top%" STRING_COMPARE "" BEGIN
+EXTEND_TOP "%script%.bcs" "%top%" EVALUATE_BUFFER
+END
+ACTION_IF "%bottom%" STRING_COMPARE "" BEGIN
+EXTEND_BOTTOM "%script%.bcs" "%bottom%" EVALUATE_BUFFER
+END
+END
+
+ /* Face orientation for CreateCreature([xxx.yyy]%FACE_x%) */
+    OUTER_SPRINT ~FACE_0~ ~,0~
+    OUTER_SPRINT ~FACE_1~ ~,1~
+    OUTER_SPRINT ~FACE_2~ ~,2~
+    OUTER_SPRINT ~FACE_3~ ~,3~
+    OUTER_SPRINT ~FACE_4~ ~,4~
+    OUTER_SPRINT ~FACE_5~ ~,5~
+    OUTER_SPRINT ~FACE_6~ ~,6~
+    OUTER_SPRINT ~FACE_7~ ~,7~
+    OUTER_SPRINT ~FACE_8~ ~,8~
+    OUTER_SPRINT ~FACE_9~ ~,9~
+    OUTER_SPRINT ~FACE_10~ ~,10~
+    OUTER_SPRINT ~FACE_11~ ~,11~
+    OUTER_SPRINT ~FACE_12~ ~,12~
+    OUTER_SPRINT ~FACE_13~ ~,13~
+    OUTER_SPRINT ~FACE_14~ ~,14~
+    OUTER_SPRINT ~FACE_15~ ~,15~
+    OUTER_SPRINT ~FACE_16~ ~,16~
+
+// Fixing Imoen's dialogue file
+  /* Tutu: Giving Imoen a banter file entry in the interdi.2da */
+  ACTION_IF FILE_EXISTS_IN_GAME ~FW0100.are~ THEN BEGIN
+    APPEND ~interdia.2da~ ~IMOEN                    _BIMOEN~ UNLESS ~_\(BIMOEN\|bimoen\)~
+  END
+  /* BGT: Giving Imoen a banter file if the Fixpack isn't installed */
+  ACTION_IF NOT (FILE_EXISTS_IN_GAME ~cdbehbla.pro~) AND (FILE_EXISTS_IN_GAME ~AR7200.are~) THEN BEGIN
+    ACTION_IF FILE_EXISTS_IN_GAME ~saradush.mve~ THEN BEGIN
+      COPY_EXISTING ~interdia.2da~ ~override~
+        SET_2DA_ENTRY 17 1 2 ~BIMOEN2~ // fixes ToB version
+      BUT_ONLY_IF_IT_CHANGES
+    END ELSE BEGIN
+        APPEND ~interdia.2da~ ~IMOEN       BIMOEN2~ // fixes SoA version
+        UNLESS ~BIMOEN2~
+    END
+  END
+
+  /* Imoen BIMOEN.DLG rebuild */
+  ACTION_IF NOT (FILE_EXISTS_IN_GAME ~_bimoen.dlg~) AND (FILE_EXISTS_IN_GAME ~FW0100.are~) THEN BEGIN
+    COMPILE ~TICLove/dialogues/x#bimoen_tutu.d~
+  END ELSE BEGIN
+    ACTION_IF NOT (FILE_EXISTS_IN_GAME ~bimoen2.dlg~) AND (FILE_EXISTS_IN_GAME ~AR7200.are~) THEN BEGIN
+      COMPILE ~TICLove/dialogues/x#bimoen_bgt.d~
+    END
+  END
+
+  /* ACTION.IDS and TRIGGER.IDS patching to ToB - thanks, Cam, if you read it */
+  /* and GTIMES.IDS, ANIMATE.IDS patching to ToB, courtesy of the BG2 Fix Pack */
+  INCLUDE ~TICLove/lib/ids_entries_cleanup.tph~
+
+/* Tutu Area Script Assignment Patching: All Areas Script ID'd */
+ACTION_IF FILE_EXISTS_IN_GAME ~FW0100.are~ THEN BEGIN
+  INCLUDE ~TICLove/lib/tutu_area_script_assign.tph~
+END
+
+/* Area Type Flagging */
+/* ToSC only: Tutu and BGT */
+ACTION_IF (FILE_EXISTS_IN_GAME ~FW1500.are~) OR (FILE_EXISTS_IN_GAME ~ARW500.are~) THEN BEGIN // if TotSC is installed
+  COPY_EXISTING ~%IsleofBalduranN%.are~ ~override~
+                ~%IsleofBalduranS%.are~ ~override~
+                ~%DurlagsTower%.are~ ~override~
+                ~%Farmlands%.are~ ~override~
+    READ_BYTE  "0x48" "flags"
+    WRITE_BYTE "0x48" ("%flags%" BOR "0b00010001")
+  BUT_ONLY_IF_IT_CHANGES
+END
+
+  /* FOREST and OUTDOOR: Tutu and BGT */
+ACTION_IF (FILE_EXISTS_IN_GAME ~FW0100.are~) OR (FILE_EXISTS_IN_GAME ~AR7200.are~) THEN BEGIN
+  COPY_EXISTING ~%FishingVillage%.are~ ~override~
+                ~%Peldvale%.are~ ~override~
+                ~%LionsWay%.are~ ~override~
+                ~%CoastWay%.are~ ~override~
+                ~%Larswood%.are~ ~override~
+                ~%ShipwrecksCoast%.are~ ~override~
+                ~%HighHedge%.are~ ~override~
+                ~%MutaminsGarden%.are~ ~override~
+                ~%Lighthouse%.are~ ~override~
+                ~%RedCanyons%.are~ ~override~
+                ~%SouthBeregostRoad%.are~ ~override~
+                ~%Ulcaster%.are~ ~override~
+                ~%ArchaeologicalSite%.are~ ~override~
+                ~%FishermansLake%.are~ ~override~
+                ~%NorthNashkelRoad%.are~ ~override~
+                ~%LonelyPeaks%.are~ ~override~
+                ~%FirewineBridge%.are~ ~override~
+                ~%BearRiver%.are~ ~override~
+                ~%ValleyoftheTombs%.are~ ~override~
+                ~%DryadFalls%.are~ ~override~
+                ~%FireLeafForest%.are~ ~override~
+                ~%GibberlingMountains%.are~ ~override~
+    READ_BYTE  "0x48" "flags"
+    WRITE_BYTE "0x48" ("%flags%" BOR "0b00010001")
+    BUT_ONLY_IF_IT_CHANGES
+
+/* OUTDOOR ONLY: Tutu and BGT */
+COPY_EXISTING ~%GnollStronghold%.are~ ~override~
+              ~%NashkelMines%.are~ ~override~
+              ~%FriendlyArmInn%.are~ ~override~
+              ~%Temple%.are~ ~override~
+              ~%NashkelCarnival%.are~ ~override~
+  READ_BYTE  "0x48" "flags"
+  WRITE_BYTE "0x48" ("%flags%" BOR "0b00000001")
+  BUT_ONLY_IF_IT_CHANGES
+
+/* CITY and OUTDOOR */
+COPY_EXISTING ~%WyrmsCrossing%.are~ ~override~
+              ~%Candlekeep_Ch6%.are~ ~override~
+              ~%Gullykin%.are~ ~override~
+  READ_BYTE  "0x48" "flags"
+  WRITE_BYTE "0x48" ("%flags%" BOR "0b00001001")
+  BUT_ONLY_IF_IT_CHANGES
+END
+END
+END
+END
+//Component: Begin Component
+BEGIN ~TICLove~
+
+// Adds custom IsValidForPartyDialogue state
+APPEND ~STATE.IDS~ // adds custom IsValidForPartyDialogue state
+  ~0x80101FEF CD_STATE_NOTVALID~
+  UNLESS ~CD_STATE_NOTVALID~
+
+//Adding music
+COPY_EXISTING ~songlist.2da~ ~override~
+SET_2DA_ENTRY 2 1 2 ~Blank~
+SET_2DA_ENTRY 2 2 2 ~Blank.mus~
+
+//Copying audio files
+COPY ~TICLove/Audio~ ~override~
+
+//TIDISPER and TICORDEL: Dispero and Cordelia
+
+COPY ~TICLove/creatures/tidisper.cre~ ~override~  //probably will turn into bg1re/.. later
+  SAY INITIAL_MEETING ~I'm feeling nice, so I'll kill you quickly!~ [REDALT9]
+  SAY SELECT_COMMON1 ~I'm feeling nice, so I'll kill you quickly!~ [REDALT9]
+  SAY NAME1 ~Dispero~
+  SAY NAME2 ~Dispero~
+  WRITE_ASCII 0x268 ~~ #8  // default script
+  WRITE_ASCII 0x280 ~TIDISPER~ #32  //DV
+  WRITE_ASCII 0x2cc ~TIDISPER~ #8   //pre-joining dialogue file
+  WRITE_ASCII 0X34 ~MFIGHT3S~ #8   //small portrait
+
+COPY ~TICLove/creatures/ticordel.cre~ ~override~  //probably will turn into bg1re/.. later
+  SAY INITIAL_MEETING ~This is ridiculous!~ [REDALT3]
+  SAY SELECT_COMMON1 ~This is ridiculous!~ [REDALT3]
+  SAY NAME1 ~Cordelia~
+  SAY NAME2 ~Cordelia~
+  WRITE_ASCII 0x268 ~~ #8  // default script
+  WRITE_ASCII 0x280 ~TICORDEL~ #32  //DV
+  WRITE_ASCII 0x2cc ~TICORDEL~ #8   //pre-joining dialogue file
+  WRITE_ASCII 0X34 ~FELF1S~ #8   //small portrait
+
+//Compiling files
+
+COMPILE EVALUATE_BUFFER ~TICLove/dialogues/TICLove.d~
+
+//Component: This is adding our area files to the game
+
+LAF extend_area_script STR_VAR area="%CloakwoodMines_L3%" top="TICLove/scripts/AR8602.baf" END
+
+// Copying custom items and spells
+
+// 1.
+COPY ~TICLove/items/BRAC02.itm~ ~override/BRAC02.itm~
+  SAY NAME1 ~Bracers~
+  SAY NAME2 ~Bracers of Defense AC 7~
+  SAY UNIDENTIFIED_DESC~Bracers are thick bands of metal or leather that are strapped, belted, or tied to a character's forearm.~
+  SAY IDENTIFIED_DESC~Bracers are thick bands of metal or leather that are strapped, belted, or tied to a character's forearm. These magical bracers surround the wearer with an invisible but tangible field of force, granting him AC 7, just as though he were wearing armor. Both bracers must be worn for the magic to be effective.
+
+STATISTICS:
+
+Armor Class: 7
+Weight: 1
+Not Usable By:
+ Kensai
+ Wizard Slayer~
+
+// 2.
+COPY ~TICLove/items/DEITM096.itm~ ~override/DEITM096.itm~
+  SAY NAME1 ~Full Plate Mail~
+  SAY NAME2 ~The Black Plate +3~
+  SAY UNIDENTIFIED_DESC~Full plate armor is the best armor a warrior can buy, both in appearance and protection. The perfectly fitted interlocking plates are specially angled to deflect arrows and blows, and the entire suit is carefully adorned with rich engraving and embossed detail.
+
+STATISTICS:
+
+Protection:
+ vs. Slash/Crush/Pierce/Missile:
+  55% / 35% / 50% / 55%
+Slowdown:
+ Dex/Move Speed/Initiative:
+  -4 / -30% / +6
+Armor Class: 6
+Hide in Shadows: -95
+Move Silently: -95
+Open Locks: -80
+Find/Remove Traps: -80
+Pick Pockets: -95
+Mage Spell Failure: +35%
+Weight: 70 (fatigue: +4)
+Requires: 15 Strength
+Not Usable By:
+ Psion
+Bard
+Druid
+Mage
+Thief
+Archer
+Stalker
+Barbarian
+Beast Master
+Kensai
+Monk~
+  SAY IDENTIFIED_DESC~This is the Black Knight's armour. It does not shine, and is completely black.
+
+STATISTICS:
+
+Protection:
+ vs. Slash/Crush/Pierce/Missile:
+  61% / 41% / 56% / 61%
+Slowdown:
+ Dex/Move Speed/Initiative:
+  -4 / -30% / +3
+Armor Class: 5
+Hide in Shadows: -90
+Move Silently: -90
+Open Locks: -80
+Find/Remove Traps: -80
+Pick Pockets: -90
+Mage Spell Failure: +32%
+Weight: 60 (fatigue: +4)
+Requires: 15 Strength
+Not Usable By:
+ Psion
+Bard
+Druid
+Mage
+Thief
+Archer
+Stalker
+Barbarian
+Beast Master
+Kensai
+Monk~
+
+// 3.
+COPY ~TICLove/items/DEITM097.itm~ ~override/DEITM097.itm~
+  SAY NAME1 ~The Black Helmet~
+  SAY NAME2 ~The Black Helmet~
+  SAY UNIDENTIFIED_DESC~This helmet is much like any normal helmet, except for the fact that it is black.
+
+STATISTICS:
+
+Armor Class Bonus: None
+Special: Protects Against Critical Hits
+Weight: 2
+Not Usable By:
+ Psion
+ Mage
+ Bard
+ Thief
+ Monk
+ Kensai
+ Beastmaster~
+
+  SAY IDENTIFIED_DESC~This helmet is much like any normal helmet, except for the fact that it is black.
+
+STATISTICS:
+
+Armor Class Bonus: None
+Special: Protects Against Critical Hits
+Weight: 2
+Not Usable By:
+ Psion
+ Druid
+ Mage
+ Bard
+ Thief
+ Monk
+ Kensai
+ Beast Master~
+
+// 4.
+COPY ~TICLove/items/O!BOM54A.itm~ ~override/O!BOM54A.itm~
+  SAY NAME1 ~Quarterstaff~
+  SAY NAME2 ~Quarter Staff +3: Defender~
+  SAY UNIDENTIFIED_DESC~The simplest and humblest of staff weapons, the quarterstaff is a length of wood ranging six to nine feet in length.  High-quality quarterstaves are made of stout oak and are shod with metal at both ends.  The quarterstaff must be wielded with both hands.
+
+STATISTICS:
+
+Damage:  1D6
+Damage type:  crushing
+Weight: 4
+Speed Factor: 4
+Proficiency Type: Staff
+Type:  2-handed
+Requires: 5 Strength~
+
+  SAY IDENTIFIED_DESC~When the Archmage Jaloon Neboam founded his school of wizardry near Waterdeep, he soon found that demand for his teachings outstripped his capacity to teach alone. He appointed no less than eight assistants, one to each Master in each school of magic. This is a copy of the staff granted to the Master of the Abjuration School, and is imbued with power appropriate to that station. Unlike the original, however, it may be used by any mage.
+
+STATISTICS:
+
+ Equipped Abilities:
+Permanent immunity to the Alteration spell school while equipped
+Permanent immunity to Time Stop while equipped
+
+  Special Abilities:
+May cast Pierce Shield 3 times per day
+May cast Spell Trap once per day
+
+Enchantment: +3
+Damage: 1d6+3
+Thac0: +3
+Damage Type: Blunt
+Weight: 4
+Speed Factor: 6
+Proficiency Type: Quarterstaff
+Type: Two-Handed
+Usable By:
+ Mage~
+
+// 5.
+COPY ~TICLove/items/WQXRO1.itm~ ~override/WQXRO1.itm~
+  SAY NAME1 ~White Robe~
+  SAY NAME2 ~White Robe~
+  SAY UNIDENTIFIED_DESC~Since the age of Netheril, mages have learned to bestow a wide variety of magical properties upon the everyday objects that surround them. A favorite item of such enchantment is the common robe. It is lightweight, affordable, and holds its enchantment well, thereby making it ideal equipment for a mage. Due to their magical heritage, however, only single-, dual-, and multi-class mages may wear these enchanted robes.~
+  SAY IDENTIFIED_DESC~This is a robe the necromancer, brother of the White Queen, used to wear. It is of white color, with some violet and gold ornaments. It doesn't have great powers like some other robes, but still it can give the wearer some special protection.
+
+STATISTICS:
+
+Protection from backstab
++5 saving throw vs. death bonus
+
+Weight:  3
+Usable by:
+Mage (single, dual, & multi-class)
+Bard~
+
+// 6.
+COPY ~TICLove/items/TICORING.itm~ ~override/TICORING.itm~
+  SAY NAME1 ~Ring~
+  SAY NAME2 ~Cordelia's Ring of Protection +1~
+  SAY UNIDENTIFIED_DESC~A ring is a small band of precious metal that is used as jewelry. Some rare rings have had enchantments placed upon them that confer various magical abilities. These rings are highly sought after, especially by those of the adventuring profession.~
+  SAY IDENTIFIED_DESC~Amulets, cloaks and rings of this sort are infused with protective spells, and are among the most popular and numerous magic items on the market. The original design may have originated in the earliest of arcane guilds, but the current makers of these items are varied and widespread. Unfortunately multiple protective enchantments of these kind don't stack, and thus no other amulet, cloak, or ring of protection can be worn while wearing this ring. This particular ring belongs to Cordelia and has the additional effect of enhancing beauty.
+
+STATISTICS:
+
+Equipped Abilities:
+ Armor Class: +1 bonus
+ Saving Throws: +1 bonus
+ +1 to Charisma
+
+Not Usable By:
+ Wizard Slayer~
+
+//Component: Copying images
+COPY ~TICLove/bams~ ~override~
+
+ACTION_IF (GAME_IS ~tutu tutu_totsc~) OR (GAME_IS ~bgt~) THEN BEGIN
+  COPY ~TICLove/images~ ~override~
+END ELSE BEGIN ACTION_IF GAME_IS ~bgee~ THEN BEGIN
+  COPY ~TICLove/images/bgee~ ~override~
+END
+END

@@ -81,4 +81,4 @@ CHAIN ~TIDISPER~ wedf
 == ~TIDISPER~ ~NO!! I won't see you ravaged!! Get out while there's still time!~
 == ~TICORDEL~ ~We'll die together, love... I won't go!~
 END
-IF ~~ THEN DO ~ActionOverride("TICORDEL",Attack(Player1)) ActionOverride("TIDISPER",Attack(Player1))~ EXIT
+IF ~~ THEN DO ~ActionOverride("TICORDEL",ENEMY(Player1)) ActionOverride("TIDISPER",ENEMY(Player1)) ActionOverride("TICORDEL",Attack(Player1)) ActionOverride("TIDISPER",Attack(Player1))~ EXIT
