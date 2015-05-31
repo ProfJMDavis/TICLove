@@ -46,7 +46,7 @@ CHAIN ~TIDISPER~ wedb
 =~But we've been planning this wedding and our honeymoon for weeks. I'm technically on vacation. For the sake of my lady, could you just pretend you didn't see us leaving?~
 END
 ++ ~We're looking for your boss--the guy who runs this whole mine. Tell us where he is and we'll let you live.~ EXTERN ~TICORDEL~ wedd
-++ ~Nothing. We'll just be on our way. You might want to consider leaving.~ EXTERN ~TICORDEL~ wede
+++ ~We'll just be on our way. You might want to consider leaving.~ EXTERN ~TICORDEL~ wede
 ++ ~We want you to die.~ + wedf
 
 CHAIN ~TIDISPER~ wedc
@@ -54,11 +54,11 @@ CHAIN ~TIDISPER~ wedc
 == ~TICORDEL~ ~Me!! You must protect me!! Our wedding has been crashed by a party of idealistic fanatics and all you can think about is the protecting some guy who couldn't be bothered to be here in the first place! NO! Don't be a fool and throw our lives away over some misplaced sense of duty. Today's my wedding day... I don't want to die!~
 == ~TIDISPER~ ~Do not worry, my love... Whatever happens, I will protect you.~
 == ~TICORDEL~ ~Look, whoever you are... You've clearly been killing our colleagues to have gotten this far in the Operation. We're probably supposed to try to stop you...~
-=~But this is MY wedding. I won't have it! I'm not going to ruin what's left of our futures over a handful of miserable slaves and an old fart who hasn't given me a raise in three years! We're going to go find someplace else to get married.~
+=~But this is MY wedding. I won't have it! I'm not going to ruin what's left of our futures over a handful of miserable slaves and an old fart who hasn't increased my wages in three years! We're going to go find someplace else to get married.~
 == ~TIDISPER~ ~Erm... Couldn't you just pretend you didn't see us leaving?~
 END
 ++ ~Tell us where Davaeorn is and we'll let you live.~ EXTERN ~TICORDEL~ wedd
-++ ~Nothing. We'll just be on our way. You might want to consider leaving.~ EXTERN ~TICORDEL~ wede
+++ ~We'll just be on our way. You might want to consider leaving.~ EXTERN ~TICORDEL~ wede
 ++ ~We want you to die.~ + wedf
 
 CHAIN ~TICORDEL~ wedd
@@ -70,7 +70,7 @@ IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",2) ActionOverride("TICORDEL",EscapeA
 
 CHAIN ~TICORDEL~ wede
 ~We'll take your advice, stranger. No offense, but I hope never to see you again.~
-=~Come, love. I have a cousin in the Cowled Wizard in Athkatla. Perhaps after our honeymoon, I can join them and you can join the militia.~
+=~Come, love. I have a cousin who's a Cowled Wizard in Athkatla. Perhaps after our honeymoon, he can help me join them and you can join the militia.~
 == ~TIDISPER~ ~Right behind you, darling.~
 END
 IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",2) ActionOverride("TICORDEL",EscapeArea()) ActionOverride("TIDISPER",EscapeArea())~ EXIT
@@ -81,4 +81,4 @@ CHAIN ~TIDISPER~ wedf
 == ~TIDISPER~ ~NO!! I won't see you ravaged!! Get out while there's still time!~
 == ~TICORDEL~ ~We'll die together, love... I won't go!~
 END
-IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",2) ActionOverride("TICORDEL",Enemy()) ActionOverride("TIDISPER",Enemy()) ActionOverride("TICORDEL",Attack(Player1)) ActionOverride("TIDISPER",Attack(Player1))~ EXIT
+IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",2) ActionOverride("TICORDEL",Enemy()) ActionOverride("TIDISPER",Enemy()) ActionOverride("TICORDEL",Attack()) ActionOverride("TIDISPER",Attack())~ EXIT
