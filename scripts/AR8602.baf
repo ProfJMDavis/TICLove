@@ -9,7 +9,8 @@ IF %BGT_VAR%
 THEN
   RESPONSE #100
     SetGlobal("TICLove","GLOBAL",1)
-        CreateCreature("TICordel",[1746.1618]%FACE_14%)
-        CreateCreature("TIDisper",[1740.1622]%FACE_6%)
+        CreateCreature("TICordel",[1664.1595]%FACE_14%)
+        CreateCreature("TIDisper",[1704.1619]%FACE_6%)
+        ActionOverride("iron11",MoveToPoint([1559.1757]))
         Continue ()
 END

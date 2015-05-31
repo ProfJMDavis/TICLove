@@ -182,27 +182,49 @@ SET_2DA_ENTRY 2 2 2 ~Blank.mus~
 //Copying audio files
 COPY ~TICLove/Audio~ ~override~
 
-//TIDISPER and TICORDEL: Dispero and Cordelia
+//TIDISPER, TICORDEL and iron11: Dispero, Cordelia and chapel guard
 
 COPY ~TICLove/creatures/tidisper.cre~ ~override~  //probably will turn into bg1re/.. later
   SAY INITIAL_MEETING ~I'm feeling nice, so I'll kill you quickly!~ [REDALT9]
   SAY SELECT_COMMON1 ~I'm feeling nice, so I'll kill you quickly!~ [REDALT9]
   SAY NAME1 ~Dispero~
   SAY NAME2 ~Dispero~
-  WRITE_ASCII 0x268 ~~ #8  // default script
+  WRITE_ASCII 0x268 ~SHOUTDL2~ #8  // default script
   WRITE_ASCII 0x280 ~TIDISPER~ #32  //DV
   WRITE_ASCII 0x2cc ~TIDISPER~ #8   //pre-joining dialogue file
   WRITE_ASCII 0X34 ~MFIGHT3S~ #8   //small portrait
+  WRITE_BYTE 0x2c 00 // Metal color
+  WRITE_BYTE 0x2d 18 // Minor color
+  WRITE_BYTE 0x2e 00 // Major color
+  WRITE_BYTE 0x2f 12 // Skin color
+  WRITE_BYTE 0x30 16 // Leather color
+  WRITE_BYTE 0x31 00 // Armor color
+  WRITE_BYTE 0x32 08 // Hair color
 
 COPY ~TICLove/creatures/ticordel.cre~ ~override~  //probably will turn into bg1re/.. later
   SAY INITIAL_MEETING ~This is ridiculous!~ [REDALT3]
   SAY SELECT_COMMON1 ~This is ridiculous!~ [REDALT3]
   SAY NAME1 ~Cordelia~
   SAY NAME2 ~Cordelia~
-  WRITE_ASCII 0x268 ~~ #8  // default script
+  WRITE_ASCII 0x268 ~SHOUTDL2~ #8  // default script
   WRITE_ASCII 0x280 ~TICORDEL~ #32  //DV
   WRITE_ASCII 0x2cc ~TICORDEL~ #8   //pre-joining dialogue file
   WRITE_ASCII 0X34 ~FELF1S~ #8   //small portrait
+  WRITE_BYTE 0x2c 05 // Metal color
+  WRITE_BYTE 0x2d 03 // Minor color
+  WRITE_BYTE 0x2e 63 // Major color
+  WRITE_BYTE 0x2f 12 // Skin color
+  WRITE_BYTE 0x30 16 // Leather color
+  WRITE_BYTE 0x31 63 // Armor color
+  WRITE_BYTE 0x32 03 // Hair color
+
+COPY ~TICLove/creatures/iron11.cre~ ~override~  //probably will turn into bg1re/.. later
+  SAY NAME1 ~Guard~
+  SAY NAME2 ~Guard~
+  WRITE_ASCII 0x248 ~SHOUT~ #8  // override script
+  WRITE_ASCII 0x250 ~INITDLG~ #8  // class script
+  WRITE_ASCII 0x280 ~iron11~ #32  //DV
+  WRITE_ASCII 0x2cc ~iron11~ #8   //pre-joining dialogue file
 
 //Compiling files
 
@@ -230,7 +252,7 @@ Not Usable By:
  Wizard Slayer~
 
 // 2.
-COPY ~TICLove/items/DEITM096.itm~ ~override/DEITM096.itm~
+COPY ~TICLove/items/DEITM96A.itm~ ~override/DEITM96A.itm~
   SAY NAME1 ~Full Plate Mail~
   SAY NAME2 ~The Black Plate +3~
   SAY UNIDENTIFIED_DESC~Full plate armor is the best armor a warrior can buy, both in appearance and protection. The perfectly fitted interlocking plates are specially angled to deflect arrows and blows, and the entire suit is carefully adorned with rich engraving and embossed detail.
@@ -264,37 +286,32 @@ Barbarian
 Beast Master
 Kensai
 Monk~
-  SAY IDENTIFIED_DESC~This is the Black Knight's armour. It does not shine, and is completely black.
+  SAY IDENTIFIED_DESC~Full plate armor is the best armor a warrior can buy, both in appearance and protection. The perfectly fitted interlocking plates are specially angled to deflect arrows and blows, and the entire suit is carefully adorned with rich engraving and embossed detail. This +2 armor has a special chip-proof, light-absorbing patina, making the armor a glossy black color.
 
 STATISTICS:
 
 Protection:
  vs. Slash/Crush/Pierce/Missile:
-  61% / 41% / 56% / 61%
+  59% / 39% / 54% / 59%
 Slowdown:
  Dex/Move Speed/Initiative:
-  -4 / -30% / +3
+  -4 / -30% / +4 
 Armor Class: 5
 Hide in Shadows: -90
 Move Silently: -90
-Open Locks: -80
-Find/Remove Traps: -80
-Pick Pockets: -90
-Mage Spell Failure: +32%
-Weight: 60 (fatigue: +4)
+Open Locks: -90
+Find/Remove Traps: -91
+Pick Pockets: -92
+Mage Spell Failure: +33%
+Weight: 65 (fatigue: +4)
 Requires: 15 Strength
+
 Not Usable By:
- Psion
+Psion 
 Bard
 Druid
 Mage
-Thief
-Archer
-Stalker
-Barbarian
-Beast Master
-Kensai
-Monk~
+Thief~
 
 // 3.
 COPY ~TICLove/items/DEITM097.itm~ ~override/DEITM097.itm~
@@ -334,9 +351,9 @@ Not Usable By:
  Beast Master~
 
 // 4.
-COPY ~TICLove/items/O!BOM54A.itm~ ~override/O!BOM54A.itm~
+COPY ~TICLove/items/STAF02.itm~ ~override/STAF02.itm~
   SAY NAME1 ~Quarterstaff~
-  SAY NAME2 ~Quarter Staff +3: Defender~
+  SAY NAME2 ~Quarter Staff +1~
   SAY UNIDENTIFIED_DESC~The simplest and humblest of staff weapons, the quarterstaff is a length of wood ranging six to nine feet in length.  High-quality quarterstaves are made of stout oak and are shod with metal at both ends.  The quarterstaff must be wielded with both hands.
 
 STATISTICS:
@@ -349,28 +366,20 @@ Proficiency Type: Staff
 Type:  2-handed
 Requires: 5 Strength~
 
-  SAY IDENTIFIED_DESC~When the Archmage Jaloon Neboam founded his school of wizardry near Waterdeep, he soon found that demand for his teachings outstripped his capacity to teach alone. He appointed no less than eight assistants, one to each Master in each school of magic. This is a copy of the staff granted to the Master of the Abjuration School, and is imbued with power appropriate to that station. Unlike the original, however, it may be used by any mage.
+  SAY IDENTIFIED_DESC~The simplest and humblest of staff weapons, the quarterstaff is a length of wood ranging six to nine feet in length. High quality quarterstaves are made of stout oak and are shod with metal at both ends. This one is particularly special, as it has been finely crafted and performs better than common staves. 
 
 STATISTICS:
 
- Equipped Abilities:
-Permanent immunity to the Alteration spell school while equipped
-Permanent immunity to Time Stop while equipped
-
-  Special Abilities:
-May cast Pierce Shield 3 times per day
-May cast Spell Trap once per day
-
-Enchantment: +3
-Damage: 1d6+3
-Thac0: +3
-Damage Type: Blunt
+THAC0: +1 bonus
+Damage: 1D6
+Damage type: crushing
 Weight: 4
-Speed Factor: 6
+Speed Factor: 3
 Proficiency Type: Quarterstaff
-Type: Two-Handed
-Usable By:
- Mage~
+Type: 2-handed
+Requires: 5 Strength
+Not Usable By:
+ Monk~
 
 // 5.
 COPY ~TICLove/items/WQXRO1.itm~ ~override/WQXRO1.itm~
@@ -392,19 +401,42 @@ Bard~
 // 6.
 COPY ~TICLove/items/TICORING.itm~ ~override/TICORING.itm~
   SAY NAME1 ~Ring~
-  SAY NAME2 ~Cordelia's Ring of Protection +1~
+  SAY NAME2 ~Cordelia's Engagement Ring~
   SAY UNIDENTIFIED_DESC~A ring is a small band of precious metal that is used as jewelry. Some rare rings have had enchantments placed upon them that confer various magical abilities. These rings are highly sought after, especially by those of the adventuring profession.~
-  SAY IDENTIFIED_DESC~Amulets, cloaks and rings of this sort are infused with protective spells, and are among the most popular and numerous magic items on the market. The original design may have originated in the earliest of arcane guilds, but the current makers of these items are varied and widespread. Unfortunately multiple protective enchantments of these kind don't stack, and thus no other amulet, cloak, or ring of protection can be worn while wearing this ring. This particular ring belongs to Cordelia and has the additional effect of enhancing beauty.
+  SAY IDENTIFIED_DESC~A ring is a small band of precious metal that is used as jewelry. Some rare rings have had enchantments placed upon them that confer various magical abilities. These rings are highly sought after, especially by those of the adventuring profession. This ring has the effect of increasing beauty.
 
 STATISTICS:
 
 Equipped Abilities:
- Armor Class: +1 bonus
- Saving Throws: +1 bonus
  +1 to Charisma
 
 Not Usable By:
  Wizard Slayer~
+
+// 7.
+COPY ~TICLove/items/SW2H02.itm~ ~override/SW2H02.itm~
+  SAY NAME1 ~Two-Handed Sword~
+  SAY NAME2 ~Two-Handed Sword +1~
+  SAY UNIDENTIFIED_DESC~The two-handed sword is a derivative of the long sword. Weaponsmiths have always looked for ways to improve existing weapons. In an effort to improve the long sword, the blade was lengthened. Eventually, the handle had to be extended and two hands became necessary to properly swing the sword. The primary function of two-handed swords is cleaving mounted knights and breaking up pike formations.~
+  SAY IDENTIFIED_DESC~The two-handed sword is a derivative of the long sword. Weaponsmiths have always looked for ways to improve existing weapons, and in an effort to improve the long sword, the blade was lengthened. Eventually, the handle had to be extended and two hands became necessary to properly swing the sword. The primary function of two-handed swords is cleaving mounted knights and breaking up pike formations. This sword is particularly good at its job, as it has been enchanted with a few magical properties.
+
+STATISTICS:
+
+THAC0: +1 bonus
+Damage: 2D6 + 1
+Damage type: slashing
+Weight: 8
+Speed Factor: 9
+Proficiency Type: Two-Handed Sword
+Type: 2-handed
+Requires: 14 Strength
+Not Usable By:
+ Cleric
+ Druid
+ Mage
+ Thief
+ Monk
+ Beast Master~
 
 //Component: Copying images
 COPY ~TICLove/bams~ ~override~

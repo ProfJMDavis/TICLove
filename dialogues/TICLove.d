@@ -3,13 +3,13 @@ BEGIN ~TICORDEL~
 
 // Feeder 1
 
-CHAIN IF ~!Allegiance(Myself,[ENEMY]) !Allegiance("TICordel",[ENEMY]) !StateCheck(Myself,CD_STATE_NOTVALID)  !StateCheck("TICordel",CD_STATE_NOTVALID) Detect("TICordel")~ THEN ~TIDisper~ Disperintro
+CHAIN IF ~!Allegiance(Myself,[ENEMY]) !Allegiance("TICordel",[ENEMY]) !StateCheck(Myself,CD_STATE_NOTVALID)  !StateCheck("TICordel",CD_STATE_NOTVALID) Detect("TICordel") Global("TICLove","GLOBAL",0)~ THEN ~TIDisper~ Disperintro
 ~*Singing.* I'm getting married in the morning...~
 EXTERN ~TIDisper~ wedparty
 
 // Feeder 2
 
-CHAIN IF ~!Allegiance(Myself,[ENEMY]) !Allegiance("TIDisper",[ENEMY]) !StateCheck(Myself,CD_STATE_NOTVALID)  !StateCheck("TIDisper",CD_STATE_NOTVALID) Detect("TIDisper")~ THEN ~TICordel~ Cordelintro
+CHAIN IF ~!Allegiance(Myself,[ENEMY]) !Allegiance("TIDisper",[ENEMY]) !StateCheck(Myself,CD_STATE_NOTVALID)  !StateCheck("TIDisper",CD_STATE_NOTVALID) Detect("TIDisper") Global("TICLove","GLOBAL",0)~ THEN ~TICordel~ Cordelintro
 ~*Singing.* I'm getting married in the morning...~
 EXTERN ~TIDisper~ wedparty
 
@@ -66,14 +66,14 @@ CHAIN ~TICORDEL~ wedd
 =~Come, love. Better to lose our jobs than our lives.~
 == ~TIDISPER~ ~Right behind you, darling.~
 END
-IF ~~ THEN DO ~ActionOverride("TICORDEL",EscapeArea()) ActionOverride("TIDISPER",EscapeArea())~ EXIT
+IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",1) ActionOverride("TICORDEL",EscapeArea()) ActionOverride("TIDISPER",EscapeArea())~ EXIT
 
 CHAIN ~TICORDEL~ wede
 ~We'll take your advice, stranger. No offense, but I hope never to see you again.~
 =~Come, love. I have a cousin in the Cowled Wizard in Athkatla. Perhaps after our honeymoon, I can join them and you can join the militia.~
 == ~TIDISPER~ ~Right behind you, darling.~
 END
-IF ~~ THEN DO ~ActionOverride("TICORDEL",EscapeArea()) ActionOverride("TIDISPER",EscapeArea())~ EXIT
+IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",1) ActionOverride("TICORDEL",EscapeArea()) ActionOverride("TIDISPER",EscapeArea())~ EXIT
 
 CHAIN ~TIDISPER~ wedf
 ~I won't let you hurt Cordelia. You'll have to go through me, first. Run, Cordelia!!~
@@ -81,4 +81,4 @@ CHAIN ~TIDISPER~ wedf
 == ~TIDISPER~ ~NO!! I won't see you ravaged!! Get out while there's still time!~
 == ~TICORDEL~ ~We'll die together, love... I won't go!~
 END
-IF ~~ THEN DO ~ActionOverride("TICORDEL",ENEMY(Player1)) ActionOverride("TIDISPER",ENEMY(Player1)) ActionOverride("TICORDEL",Attack(Player1)) ActionOverride("TIDISPER",Attack(Player1))~ EXIT
+IF ~~ THEN DO ~SetGlobal("TICLove","GLOBAL",1) ActionOverride("TICORDEL",Enemy()) ActionOverride("TIDISPER",Enemy()) ActionOverride("TICORDEL",Attack(Player1)) ActionOverride("TIDISPER",Attack(Player1))~ EXIT
